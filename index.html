@@ -3,76 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARA Lottery DApp</title>
+    <title>PuLotto DApp</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Using unpkg for better reliability for ethers.js -->
     <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js" type="application/javascript"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
-        .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
-        button:hover { background-color: #45a049; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        input[type="text"], input[type="number"] { padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
-        .status { margin-top: 15px; padding: 10px; background-color: #e0f2f7; border-left: 5px solid #2196F3; }
-        .error { background-color: #ffe0e0; border-left: 5px solid #f44336; }
-        .player-list { list-style-type: none; padding: 0; }
-        .player-list li { background-color: #f9f9f9; margin-bottom: 5px; padding: 8px; border-radius: 4px; border: 1px solid #eee; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for dark theme */
+        .player-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .player-list::-webkit-scrollbar-track {
+            background: #4a5568; /* Darker scrollbar track */
+            border-radius: 10px;
+        }
+        .player-list::-webkit-scrollbar-thumb {
+            background: #6b7280; /* Lighter scrollbar thumb */
+            border-radius: 10px;
+        }
+        .player-list::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; /* Even lighter on hover */
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>TARA Community Lottery 🎲</h1>
-        <p>Play with TARA and win big!</p>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+    <div class="container bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-2xl border border-gray-700">
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center mb-2">
+                <img src="https://chadpu.carrd.co/assets/images/image28.png?v=5428f06c" onerror="this.onerror=null;this.src='https://placehold.co/60x60/333/fff?text=CHDPU';" alt="CHDPU Logo" class="h-16 w-auto mr-4 object-contain">
+                <h1 class="text-5xl font-extrabold text-green-400">PuLotto 🎲</h1>
+            </div>
+            <div class="flex items-center justify-center text-xl text-gray-300">
+                <p class="mr-2">Play with</p>
+                <img src="https://chadpu.carrd.co/assets/images/image27.png?v=5428f06c" onerror="this.onerror=null;this.src='https://placehold.co/40x40/333/fff?text=TARA';" alt="TARA Logo" class="h-10 w-auto mr-2 object-contain">
+                <p>and win big!</p>
+            </div>
+        </div>
 
-        <div class="status" id="statusMessage">Connect your wallet to get started.</div>
+        <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">What Is PuLotto?</h2>
+            <p class="text-gray-300 mb-4">
+                PuLotto is chad-first lottery built on Taraxa and paid in $TARA.
+            </p>
+            <p class="text-gray-300 mb-4">
+                Anyone can play. One winner takes the pot.
+            </p>
+            <p class="text-gray-300 mb-4">
+                But CHDPU always wins — with 10% of every round fueling its ecosystem.
+            </p>
+            <h3 class="text-xl font-semibold text-green-400 mb-2">💥 How It Powers $CHDPU:</h3>
+            <ul class="list-disc list-inside text-gray-300 mb-4 pl-4">
+                <li>10% dev fee from each pot is used to:</li>
+                <ul class="list-circle list-inside ml-4">
+                    <li>🔥 Buy & burn $CHDPU</li>
+                    <li>💧 Add to LP liquidity</li>
+                    <li>📢 Fund marketing initiatives</li>
+                </ul>
+                <li>Creates a sustainable loop: fun for players, perpetual fuel for the CHDPU and TARA flywheel</li>
+                <li>No rug, no gatekeeping — just recurring on-chain action that grows $CHDPU organically</li>
+                <li>Lottery becomes a memetic engine to onboard new users & keep Taraxa volume thriving</li>
+            </ul>
+        </section>
 
-        <h2>Wallet Connection</h2>
-        <button id="connectWalletBtn">Connect Rabby Wallet</button>
-        <p>Connected Account: <span id="accountAddress">Not Connected</span></p>
-        <p>Network ID: <span id="networkId"></span></p>
+        <div id="statusMessage" class="status bg-blue-900 border-l-4 border-blue-600 text-blue-300 p-4 rounded-md mb-6 shadow-inner">
+            Connect your wallet to get started.
+        </div>
 
-        <hr>
+        <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Wallet Connection</h2>
+            <button id="connectWalletBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                Connect your wallet
+            </button>
+            <p class="mt-4 text-gray-300">Connected Account: <span id="accountAddress" class="font-medium text-green-300 break-all">Not Connected</span></p>
+            <p class="text-gray-300">Network ID: <span id="networkId" class="font-medium text-green-300"></span></p>
+        </section>
 
-        <h2>Lottery Details</h2>
-        <p>Lottery ID: <span id="lotteryId">N/A</span></p>
-        <p>Ticket Price: <span id="ticketPrice">N/A</span> TARA</p>
-        <p>Prize Pool: <span id="prizePool">N/A</span> TARA</p>
-        <p>Current Players: <span id="numPlayers">N/A</span></p>
-        <p>Winner of Last Round: <span id="currentWinner">N/A</span></p>
-        <button id="refreshDetailsBtn">Refresh Details</button>
+        <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Lottery Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+                <p>Lottery ID: <span id="lotteryId" class="font-medium text-green-300">N/A</span></p>
+                <p>Ticket Price: <span id="ticketPrice" class="font-medium text-green-300">N/A</span> TARA</p>
+                <p>Prize Pool: <span id="prizePool" class="font-medium text-green-300">N/A</span> TARA</p>
+                <p>Current Players: <span id="numPlayers" class="font-medium text-green-300">N/A</span></p>
+                <p class="md:col-span-2">Winner of Last Round: <span id="currentWinner" class="font-medium text-green-300 break-all">N/A</span></p>
+            </div>
+            <p class="mt-4 text-gray-300">
+                Contract Address: 
+                <a id="contractAddressLink" href="https://tara.to/address/0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb" target="_blank" class="font-medium text-blue-400 break-all hover:underline">
+                    0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb
+                </a>
+            </p>
+            <p class="text-gray-300">Contract Owner: <span id="contractOwnerAddress" class="font-medium text-green-300 break-all">0x8335e52eea3b21c6a2675e6d9cd9525d4b105640</span></p>
+            <button id="refreshDetailsBtn" class="mt-6 bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Refresh Details
+            </button>
+        </section>
 
-        <hr>
+        <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Play Lottery</h2>
+            <p class="text-gray-300">Cost per entry: <span id="entryCostSpan" class="font-medium text-green-300">Loading...</span> TARA</p>
+            <p class="mb-4 text-gray-300">Your TARA Balance: <span id="taraBalance" class="font-medium text-green-300">Loading...</span> TARA</p>
+            <button id="enterLotteryBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" disabled>
+                Enter Lottery
+            </button>
+        </section>
 
-        <h2>Play Lottery</h2>
-        <p>Cost per entry: <span id="entryCostSpan">Loading...</span> TARA</p>
-        <p>Your TARA Balance: <span id="taraBalance">Loading...</span> TARA</p>
-        <button id="enterLotteryBtn">Enter Lottery</button>
+        <section id="managerActionsSection" class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600" style="display: none;">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Manager Actions (Owner Only)</h2>
+            <button id="pickWinnerBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4" disabled>
+                Pick Winner & Reset
+            </button>
+            <p class="mb-4 text-gray-300">Accumulated Owner Fees: <span id="ownerFeesAccumulated" class="font-medium text-green-300">N/A</span> TARA</p>
+            <button id="collectOwnerFeesBtn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" disabled>
+                Collect Owner Fees
+            </button>
+        </section>
 
-        <hr>
+        <section class="p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Players in Current Round</h2>
+            <ul id="playersList" class="player-list bg-gray-800 p-4 rounded-md border border-gray-700 h-48 overflow-y-auto">
+                <li class="text-gray-400">No players yet...</li>
+            </ul>
+        </section>
 
-        <h2>Manager Actions (Owner Only)</h2>
-        <button id="pickWinnerBtn">Pick Winner & Reset</button>
-        <p>Accumulated Owner Fees: <span id="ownerFeesAccumulated">N/A</span> TARA</p>
-        <button id="collectOwnerFeesBtn">Collect Owner Fees</button>
-
-        <hr>
-
-        <h2>Players in Current Round</h2>
-        <ul id="playersList" class="player-list">
-            <li>No players yet...</li>
-        </ul>
+        <section class="mt-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Past Lottery Winners</h2>
+            <ul id="pastWinnersList" class="player-list bg-gray-800 p-4 rounded-md border border-gray-700 h-48 overflow-y-auto">
+                <li class="text-gray-400">No past winners yet...</li>
+            </ul>
+        </section>
 
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        // Your Deployed TARA Lottery Contract Address on Taraxa Mainnet
-        const TARA_LOTTERY_CONTRACT_ADDRESS = "0xf43a5a4d4e8f41decab48980ed96e14a1eb246fb"; 
+        const TARA_LOTTERY_CONTRACT_ADDRESS = "0xf43a5a4d4e8f41decab48980ed96e14a1eb246fb";
         const TARAXA_MAINNET_CHAIN_ID = 841; // Taraxa Mainnet Chain ID
+        const CONTRACT_OWNER_ADDRESS = "0x8335e52eea3b21c6a2675e6d9cd9525d4b105640"; // CHDPU Dev wallet
 
         // --- ABI for TARA Lottery Contract ---
-        // This ABI is from your successfully deployed TARALottery contract
         const TARA_LOTTERY_ABI = [
             {
                 "inputs": [
@@ -242,6 +315,7 @@
         let signer;
         let userAddress;
         let lotteryContract;
+        let pastWinners = []; // Array to store past winners
 
         const statusMessage = document.getElementById('statusMessage');
         const accountAddress = document.getElementById('accountAddress');
@@ -254,25 +328,59 @@
         const taraBalanceSpan = document.getElementById('taraBalance');
         const entryCostSpan = document.getElementById('entryCostSpan');
         const playersList = document.getElementById('playersList');
-        const ownerFeesAccumulatedSpan = document.getElementById('ownerFeesAccumulated'); // New element
+        const ownerFeesAccumulatedSpan = document.getElementById('ownerFeesAccumulated');
+        const managerActionsSection = document.getElementById('managerActionsSection'); // Manager section
+        const pastWinnersList = document.getElementById('pastWinnersList'); // Past winners list
 
         const connectWalletBtn = document.getElementById('connectWalletBtn');
         const enterLotteryBtn = document.getElementById('enterLotteryBtn');
         const pickWinnerBtn = document.getElementById('pickWinnerBtn');
         const refreshDetailsBtn = document.getElementById('refreshDetailsBtn');
-        const collectOwnerFeesBtn = document.getElementById('collectOwnerFeesBtn'); // New button
+        const collectOwnerFeesBtn = document.getElementById('collectOwnerFeesBtn');
 
         // --- Helper Functions ---
         function setStatus(message, isError = false) {
             statusMessage.textContent = message;
-            statusMessage.className = isError ? 'status error' : 'status';
+            statusMessage.className = isError
+                ? 'bg-red-900 border-l-4 border-red-600 text-red-300 p-4 rounded-md mb-6 shadow-inner'
+                : 'bg-blue-900 border-l-4 border-blue-600 text-blue-300 p-4 rounded-md mb-6 shadow-inner';
+        }
+
+        function loadPastWinners() {
+            const storedWinners = localStorage.getItem('pastLotteryWinners');
+            if (storedWinners) {
+                pastWinners = JSON.parse(storedWinners);
+            }
+        }
+
+        function savePastWinners() {
+            localStorage.setItem('pastLotteryWinners', JSON.stringify(pastWinners));
+        }
+
+        function renderPastWinners() {
+            pastWinnersList.innerHTML = '';
+            if (pastWinners.length > 0) {
+                // Display in reverse chronological order
+                [...pastWinners].reverse().forEach(winnerData => {
+                    const li = document.createElement('li');
+                    li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all"; // Dark theme list item
+                    li.textContent = `Lottery ID ${winnerData.lotteryId}: Winner ${winnerData.winner} won ${winnerData.prizeAmount} TARA`;
+                    pastWinnersList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No past winners yet...';
+                li.className = "text-gray-400 italic"; // Dark theme empty list message
+                pastWinnersList.appendChild(li);
+            }
         }
 
         async function updateUI() {
             if (!provider || !userAddress || !lotteryContract) {
                 enterLotteryBtn.disabled = true;
                 pickWinnerBtn.disabled = true;
-                collectOwnerFeesBtn.disabled = true; // Disable new button too
+                collectOwnerFeesBtn.disabled = true;
+                managerActionsSection.style.display = 'none'; // Hide manager section
                 return;
             }
 
@@ -282,28 +390,30 @@
                 const currentTicketPriceWei = await lotteryContract.ticketPrice();
                 const players = await lotteryContract.getPlayers();
                 const winnerAddress = await lotteryContract.currentWinner();
-                const accumulatedFeesWei = await lotteryContract.getOwnerFeesAccumulated(); // Get accumulated fees
+                const accumulatedFeesWei = await lotteryContract.getOwnerFeesAccumulated();
 
                 // Get Contract's TARA Balance (Prize Pool)
                 const prizePoolWei = await provider.getBalance(TARA_LOTTERY_CONTRACT_ADDRESS);
 
                 lotteryIdSpan.textContent = currentLotteryId.toString();
                 ticketPriceSpan.textContent = ethers.utils.formatEther(currentTicketPriceWei);
-                prizePoolSpan.textContent = ethers.utils.formatEther(prizePoolWei); 
+                prizePoolSpan.textContent = ethers.utils.formatEther(prizePoolWei);
                 numPlayersSpan.textContent = players.length;
                 currentWinnerSpan.textContent = winnerAddress === '0x0000000000000000000000000000000000000000' ? 'N/A (No winner yet or reset)' : winnerAddress;
-                ownerFeesAccumulatedSpan.textContent = ethers.utils.formatEther(accumulatedFeesWei); // Display accumulated fees
+                ownerFeesAccumulatedSpan.textContent = ethers.utils.formatEther(accumulatedFeesWei);
 
                 playersList.innerHTML = '';
                 if (players.length > 0) {
                     players.forEach(player => {
                         const li = document.createElement('li');
                         li.textContent = player;
+                        li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all"; // Tailwind for list items
                         playersList.appendChild(li);
                     });
                 } else {
                     const li = document.createElement('li');
                     li.textContent = 'No players yet. Be the first!';
+                    li.className = "text-gray-400 italic"; // Tailwind for empty list message
                     playersList.appendChild(li);
                 }
 
@@ -320,16 +430,19 @@
                     enterLotteryBtn.disabled = false;
                     setStatus("Wallet connected. Ready to play!");
                 }
-                
-                // Check if user is owner for manager buttons
-                const contractOwner = await lotteryContract.owner();
-                if (userAddress.toLowerCase() === contractOwner.toLowerCase()) {
+
+                // Check if user is owner for manager buttons and section visibility
+                if (userAddress.toLowerCase() === CONTRACT_OWNER_ADDRESS.toLowerCase()) {
+                    managerActionsSection.style.display = 'block'; // Show manager section
                     pickWinnerBtn.disabled = false;
-                    collectOwnerFeesBtn.disabled = (accumulatedFeesWei.isZero()); // Enable collect fees only if there are fees
+                    collectOwnerFeesBtn.disabled = (accumulatedFeesWei.isZero());
                 } else {
+                    managerActionsSection.style.display = 'none'; // Hide manager section
                     pickWinnerBtn.disabled = true;
                     collectOwnerFeesBtn.disabled = true;
                 }
+
+                renderPastWinners(); // Render past winners on UI update
 
             } catch (error) {
                 setStatus(`Error updating UI: ${error.message}`, true);
@@ -337,25 +450,29 @@
                 enterLotteryBtn.disabled = true;
                 pickWinnerBtn.disabled = true;
                 collectOwnerFeesBtn.disabled = true;
+                managerActionsSection.style.display = 'none'; // Hide manager section on error
             }
         }
 
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
+            loadPastWinners(); // Load past winners on page load
+            renderPastWinners(); // Render them immediately
             if (typeof window.ethereum === 'undefined') {
-                setStatus("Rabby Wallet (or MetaMask) not detected. Please install it.", true);
+                setStatus("Your wallet (e.g., Rabby or MetaMask) not detected. Please install it.", true);
                 connectWalletBtn.disabled = true;
             } else {
                 enterLotteryBtn.disabled = true;
                 pickWinnerBtn.disabled = true;
                 collectOwnerFeesBtn.disabled = true;
+                managerActionsSection.style.display = 'none'; // Hide manager section initially
             }
         });
 
         connectWalletBtn.addEventListener('click', async () => {
             try {
                 if (!window.ethereum) {
-                    throw new Error("Rabby Wallet not found. Please install it.");
+                    throw new Error("Your wallet not found. Please install it.");
                 }
 
                 provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -373,13 +490,26 @@
                     enterLotteryBtn.disabled = true;
                     pickWinnerBtn.disabled = true;
                     collectOwnerFeesBtn.disabled = true;
-                    return; 
+                    managerActionsSection.style.display = 'none';
+                    return;
                 }
 
                 signer = provider.getSigner();
 
                 // Initialize contract instance
                 lotteryContract = new ethers.Contract(TARA_LOTTERY_CONTRACT_ADDRESS, TARA_LOTTERY_ABI, signer);
+
+                // Listen for WinnerPicked events
+                lotteryContract.on("WinnerPicked", (lotteryId, winner, prizeAmount, event) => {
+                    console.log(`WinnerPicked Event: Lottery ID ${lotteryId}, Winner ${winner}, Prize ${ethers.utils.formatEther(prizeAmount)} TARA`);
+                    pastWinners.push({
+                        lotteryId: lotteryId.toString(),
+                        winner: winner,
+                        prizeAmount: ethers.utils.formatEther(prizeAmount)
+                    });
+                    savePastWinners();
+                    updateUI(); // Re-render UI to show new winner
+                });
 
                 setStatus("Wallet connected and contracts loaded. Fetching lottery details...");
                 updateUI();
@@ -403,6 +533,7 @@
                 enterLotteryBtn.disabled = true;
                 pickWinnerBtn.disabled = true;
                 collectOwnerFeesBtn.disabled = true;
+                managerActionsSection.style.display = 'none';
             }
         });
 
@@ -411,12 +542,12 @@
                 setStatus("Please connect wallet first.", true);
                 return;
             }
-            
+
             try {
                 const currentTicketPriceWei = await lotteryContract.ticketPrice();
                 const userTaraBalanceWei = await provider.getBalance(userAddress);
 
-                if (userTaraBalanceWei.lt(currentTicketPriceWei)) {
+                if (userTaraBalanceWei.lt(currentTicketPriceWei)) { // Corrected variable name from userTaraWei to userTaraBalanceWei
                     setStatus("Cannot enter: Insufficient TARA balance.", true);
                     return;
                 }
@@ -440,7 +571,7 @@
                 setStatus("Please connect wallet first.", true);
                 return;
             }
-            
+
             const contractOwner = await lotteryContract.owner();
             if (userAddress.toLowerCase() !== contractOwner.toLowerCase()) {
                 setStatus("Only the contract owner can pick a winner.", true);
@@ -454,7 +585,8 @@
                 await tx.wait();
                 setStatus("Winner picked, prize distributed, lottery reset!");
                 updateUI();
-            } catch (error) {
+            }
+            catch (error) {
                 setStatus(`Picking winner failed: ${error.message}`, true);
                 console.error("Pick winner error:", error);
                 console.error("Full Ethers.js error object:", JSON.stringify(error, null, 2));
@@ -466,7 +598,7 @@
                 setStatus("Please connect wallet first.", true);
                 return;
             }
-            
+
             const contractOwner = await lotteryContract.owner();
             if (userAddress.toLowerCase() !== contractOwner.toLowerCase()) {
                 setStatus("Only the contract owner can collect fees.", true);
