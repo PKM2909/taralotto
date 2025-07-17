@@ -6,7 +6,8 @@
     <title>PuLotto DApp</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Inter font from Google Fonts - Excellent readability and modern aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Using unpkg for better reliability for ethers.js -->
     <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js" type="application/javascript"></script>
     <style>
@@ -46,27 +47,13 @@
 
         <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
             <h2 class="text-2xl font-semibold text-green-400 mb-4">What Is PuLotto?</h2>
-            <p class="text-gray-300 mb-4">
-                PuLotto is chad-first lottery built on Taraxa and paid in $TARA.
+            <p class="text-gray-300 mb-4 font-light">
+                <span class="font-medium">PuLotto</span> is a permissionless, community-first lottery built on Taraxa and paid in <span class="font-medium">$TARA</span>.
+                Anyone can play, and one winner takes the pot.
             </p>
-            <p class="text-gray-300 mb-4">
-                Anyone can play. One winner takes the pot.
+            <p class="text-gray-300 font-light">
+                But <span class="font-medium">CHDPU always wins</span> — with 10% of every round fueling its ecosystem through buy & burn, LP liquidity, and marketing initiatives. This creates a sustainable loop: fun for players, perpetual fuel for the CHDPU and TARA flywheel. No rug, no gatekeeping — just recurring on-chain action that grows <span class="font-medium">$CHDPU</span> organically, making the lottery a memetic engine to onboard new users & keep Taraxa volume thriving.
             </p>
-            <p class="text-gray-300 mb-4">
-                But CHDPU always wins — with 10% of every round fueling its ecosystem.
-            </p>
-            <h3 class="text-xl font-semibold text-green-400 mb-2">💥 How It Powers $CHDPU:</h3>
-            <ul class="list-disc list-inside text-gray-300 mb-4 pl-4">
-                <li>10% dev fee from each pot is used to:</li>
-                <ul class="list-circle list-inside ml-4">
-                    <li>🔥 Buy & burn $CHDPU</li>
-                    <li>💧 Add to LP liquidity</li>
-                    <li>📢 Fund marketing initiatives</li>
-                </ul>
-                <li>Creates a sustainable loop: fun for players, perpetual fuel for the CHDPU and TARA flywheel</li>
-                <li>No rug, no gatekeeping — just recurring on-chain action that grows $CHDPU organically</li>
-                <li>Lottery becomes a memetic engine to onboard new users & keep Taraxa volume thriving</li>
-            </ul>
         </section>
 
         <div id="statusMessage" class="status bg-blue-900 border-l-4 border-blue-600 text-blue-300 p-4 rounded-md mb-6 shadow-inner">
@@ -78,26 +65,19 @@
             <button id="connectWalletBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
                 Connect your wallet
             </button>
-            <p class="mt-4 text-gray-300">Connected Account: <span id="accountAddress" class="font-medium text-green-300 break-all">Not Connected</span></p>
-            <p class="text-gray-300">Network ID: <span id="networkId" class="font-medium text-green-300"></span></p>
+            <p class="mt-4 text-gray-300">Connected Account: <span id="accountAddress" class="font-medium text-green-300 text-sm break-all">Not Connected</span></p>
+            <p class="text-gray-300">Network ID: <span id="networkId" class="font-medium text-green-300 text-sm"></span></p>
         </section>
 
         <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
             <h2 class="text-2xl font-semibold text-green-400 mb-4">Lottery Details</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
-                <p>Lottery ID: <span id="lotteryId" class="font-medium text-green-300">N/A</span></p>
-                <p>Ticket Price: <span id="ticketPrice" class="font-medium text-green-300">N/A</span> TARA</p>
-                <p>Prize Pool: <span id="prizePool" class="font-medium text-green-300">N/A</span> TARA</p>
-                <p>Current Players: <span id="numPlayers" class="font-medium text-green-300">N/A</span></p>
-                <p class="md:col-span-2">Winner of Last Round: <span id="currentWinner" class="font-medium text-green-300 break-all">N/A</span></p>
+                <p class="text-xl font-medium">Lottery ID: <span id="lotteryId" class="font-bold text-green-300">N/A</span></p>
+                <p class="text-xl font-medium">Ticket Price: <span id="ticketPrice" class="font-bold text-green-300">N/A</span> TARA</p>
+                <p class="text-xl md:col-span-2 font-medium">Prize Pool: <span id="prizePool" class="font-bold text-green-300">N/A</span> TARA</p>
+                <p class="text-xl md:col-span-2 font-medium">Current Tickets Sold: <span id="numPlayers" class="font-bold text-green-300">N/A</span></p>
+                <p class="md:col-span-2 text-xl font-medium">Winner of Last Round: <span id="currentWinner" class="font-bold text-green-300 text-sm break-all">N/A</span> <span id="currentWinnerAmount" class="font-bold text-green-300 text-sm"></span></p>
             </div>
-            <p class="mt-4 text-gray-300">
-                Contract Address: 
-                <a id="contractAddressLink" href="https://tara.to/address/0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb" target="_blank" class="font-medium text-blue-400 break-all hover:underline">
-                    0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb
-                </a>
-            </p>
-            <p class="text-gray-300">Contract Owner: <span id="contractOwnerAddress" class="font-medium text-green-300 break-all">0x8335e52eea3b21c6a2675e6d9cd9525d4b105640</span></p>
             <button id="refreshDetailsBtn" class="mt-6 bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
                 Refresh Details
             </button>
@@ -105,19 +85,19 @@
 
         <section class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
             <h2 class="text-2xl font-semibold text-green-400 mb-4">Play Lottery</h2>
-            <p class="text-gray-300">Cost per entry: <span id="entryCostSpan" class="font-medium text-green-300">Loading...</span> TARA</p>
-            <p class="mb-4 text-gray-300">Your TARA Balance: <span id="taraBalance" class="font-medium text-green-300">Loading...</span> TARA</p>
+            <p class="text-gray-300 font-medium">Cost per entry: <span id="entryCostSpan" class="font-bold text-green-300">Loading...</span> TARA</p>
+            <p class="mb-4 text-gray-300 font-medium">Your TARA Balance: <span id="taraBalance" class="font-bold text-green-300">Loading...</span> TARA</p>
             <button id="enterLotteryBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" disabled>
                 Enter Lottery
             </button>
         </section>
 
         <section id="managerActionsSection" class="mb-8 p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600" style="display: none;">
-            <h2 class="text-2xl font-semibold text-green-400 mb-4">Manager Actions (Owner Only)</h2>
+            <h2 class="text-2xl font-semibold text-green-400 mb-4">Manager Actions <span class="italic text-gray-400 text-base">(Owner Only)</span></h2>
             <button id="pickWinnerBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-4" disabled>
                 Pick Winner & Reset
             </button>
-            <p class="mb-4 text-gray-300">Accumulated Owner Fees: <span id="ownerFeesAccumulated" class="font-medium text-green-300">N/A</span> TARA</p>
+            <p class="mb-4 text-gray-300 font-medium">Accumulated Owner Fees: <span id="ownerFeesAccumulated" class="font-bold text-green-300">N/A</span> TARA</p>
             <button id="collectOwnerFeesBtn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" disabled>
                 Collect Owner Fees
             </button>
@@ -125,7 +105,13 @@
 
         <section class="p-6 bg-gray-700 rounded-lg shadow-md border border-gray-600">
             <h2 class="text-2xl font-semibold text-green-400 mb-4">Players in Current Round</h2>
-            <ul id="playersList" class="player-list bg-gray-800 p-4 rounded-md border border-gray-700 h-48 overflow-y-auto">
+            <p class="text-gray-300 mb-2 font-medium">
+                <span id="uniquePlayersCount" class="font-bold text-green-300">N/A</span> unique players.
+                <button id="togglePlayersListBtn" class="ml-2 text-blue-400 hover:underline text-sm focus:outline-none font-normal">
+                    Show All Tickets
+                </button>
+            </p>
+            <ul id="playersList" class="player-list bg-gray-800 p-4 rounded-md border border-gray-700 h-48 overflow-y-auto" style="display: none;">
                 <li class="text-gray-400">No players yet...</li>
             </ul>
         </section>
@@ -136,6 +122,16 @@
                 <li class="text-gray-400">No past winners yet...</li>
             </ul>
         </section>
+
+        <footer class="mt-8 text-center text-xs text-gray-500">
+            <p class="mb-1">
+                Contract Address: 
+                <a id="footerContractAddressLink" href="https://tara.to/address/0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb" target="_blank" class="font-medium text-blue-400 break-all hover:underline text-xs">
+                    0xf43A5a4d4e8f41DeCAb48980Ed96E14A1eb246fb
+                </a>
+            </p>
+            <p>Contract Owner: <span id="footerContractOwnerAddress" class="font-medium text-gray-400 break-all text-xs">0x8335e52eea3b21c6a2675e6d9cd9525d4b105640</span></p>
+        </footer>
 
     </div>
 
@@ -323,14 +319,17 @@
         const lotteryIdSpan = document.getElementById('lotteryId');
         const ticketPriceSpan = document.getElementById('ticketPrice');
         const prizePoolSpan = document.getElementById('prizePool');
-        const numPlayersSpan = document.getElementById('numPlayers');
+        const numPlayersSpan = document.getElementById('numPlayers'); // Now represents tickets sold
         const currentWinnerSpan = document.getElementById('currentWinner');
+        const currentWinnerAmountSpan = document.getElementById('currentWinnerAmount'); // New span for winner amount
         const taraBalanceSpan = document.getElementById('taraBalance');
         const entryCostSpan = document.getElementById('entryCostSpan');
         const playersList = document.getElementById('playersList');
         const ownerFeesAccumulatedSpan = document.getElementById('ownerFeesAccumulated');
         const managerActionsSection = document.getElementById('managerActionsSection'); // Manager section
         const pastWinnersList = document.getElementById('pastWinnersList'); // Past winners list
+        const uniquePlayersCountSpan = document.getElementById('uniquePlayersCount'); // New span for unique players
+        const togglePlayersListBtn = document.getElementById('togglePlayersListBtn'); // New button for toggling players list
 
         const connectWalletBtn = document.getElementById('connectWalletBtn');
         const enterLotteryBtn = document.getElementById('enterLotteryBtn');
@@ -363,14 +362,14 @@
                 // Display in reverse chronological order
                 [...pastWinners].reverse().forEach(winnerData => {
                     const li = document.createElement('li');
-                    li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all"; // Dark theme list item
-                    li.textContent = `Lottery ID ${winnerData.lotteryId}: Winner ${winnerData.winner} won ${winnerData.prizeAmount} TARA`;
+                    li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all text-sm"; // Dark theme list item, smaller text
+                    li.textContent = `Lottery ID ${winnerData.lotteryId}: Winner ${winnerData.winner.substring(0, 6)}...${winnerData.winner.slice(-4)} won ${winnerData.prizeAmount} TARA`;
                     pastWinnersList.appendChild(li);
                 });
             } else {
                 const li = document.createElement('li');
                 li.textContent = 'No past winners yet...';
-                li.className = "text-gray-400 italic"; // Dark theme empty list message
+                li.className = "text-gray-400 italic text-sm"; // Dark theme empty list message, smaller text
                 pastWinnersList.appendChild(li);
             }
         }
@@ -398,22 +397,33 @@
                 lotteryIdSpan.textContent = currentLotteryId.toString();
                 ticketPriceSpan.textContent = ethers.utils.formatEther(currentTicketPriceWei);
                 prizePoolSpan.textContent = ethers.utils.formatEther(prizePoolWei);
-                numPlayersSpan.textContent = players.length;
-                currentWinnerSpan.textContent = winnerAddress === '0x0000000000000000000000000000000000000000' ? 'N/A (No winner yet or reset)' : winnerAddress;
+                numPlayersSpan.textContent = players.length; // Total tickets sold
+
+                // Find the winner's amount from pastWinners if available
+                const lastWinnerData = pastWinners.find(w => w.lotteryId === (currentLotteryId.sub(1)).toString());
+                currentWinnerSpan.textContent = winnerAddress === '0x0000000000000000000000000000000000000000' ? 'N/A (No winner yet or reset)' : `${winnerAddress.substring(0, 6)}...${winnerAddress.slice(-4)}`;
+                currentWinnerAmountSpan.textContent = lastWinnerData ? `(Won ${lastWinnerData.prizeAmount} TARA)` : '';
+
+
                 ownerFeesAccumulatedSpan.textContent = ethers.utils.formatEther(accumulatedFeesWei);
 
                 playersList.innerHTML = '';
                 if (players.length > 0) {
+                    // Calculate unique players
+                    const uniquePlayers = new Set(players.map(p => p.toLowerCase()));
+                    uniquePlayersCountSpan.textContent = uniquePlayers.size;
+
                     players.forEach(player => {
                         const li = document.createElement('li');
                         li.textContent = player;
-                        li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all"; // Tailwind for list items
+                        li.className = "bg-gray-700 p-2 rounded-md shadow-sm mb-1 text-gray-300 break-all text-sm"; // Tailwind for list items, smaller text
                         playersList.appendChild(li);
                     });
                 } else {
+                    uniquePlayersCountSpan.textContent = 0;
                     const li = document.createElement('li');
                     li.textContent = 'No players yet. Be the first!';
-                    li.className = "text-gray-400 italic"; // Tailwind for empty list message
+                    li.className = "text-gray-400 italic text-sm"; // Tailwind for empty list message, smaller text
                     playersList.appendChild(li);
                 }
 
@@ -547,7 +557,7 @@
                 const currentTicketPriceWei = await lotteryContract.ticketPrice();
                 const userTaraBalanceWei = await provider.getBalance(userAddress);
 
-                if (userTaraBalanceWei.lt(currentTicketPriceWei)) { // Corrected variable name from userTaraWei to userTaraBalanceWei
+                if (userTaraBalanceWei.lt(currentTicketPriceWei)) {
                     setStatus("Cannot enter: Insufficient TARA balance.", true);
                     return;
                 }
@@ -620,6 +630,17 @@
         });
 
         refreshDetailsBtn.addEventListener('click', updateUI);
+
+        // Toggle players list visibility
+        togglePlayersListBtn.addEventListener('click', () => {
+            if (playersList.style.display === 'none') {
+                playersList.style.display = 'block';
+                togglePlayersListBtn.textContent = 'Hide All Tickets';
+            } else {
+                playersList.style.display = 'none';
+                togglePlayersListBtn.textContent = 'Show All Tickets';
+            }
+        });
 
         // Initial UI update if wallet is already connected (e.g., after refresh)
         if (window.ethereum && window.ethereum.selectedAddress) {
